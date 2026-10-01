@@ -1,4 +1,4 @@
-﻿"""Build route plans by combining geocoding, routing, stations, and refuelling."""
+"""Build route plans by combining geocoding, routing, stations, and refuelling."""
 
 from __future__ import annotations
 
@@ -300,6 +300,30 @@ class Planner:
                 "lng": finish.point.lng,
                 "source": finish.source,
             },
+            "summary": {
+                "total_fuel_cost_usd": total_fuel_cost,
+                "fuel_paid_at_stations_usd": paid_at_stations,
+                "starting_tank_value_usd": starting_tank_value,
+                "price_basis_per_gallon": price_basis,
+                "cost_basis": cost_basis,
+                "gallons_purchased": round(plan.gallons_purchased, 3),
+                "gallons_consumed": round(plan.gallons_consumed, 3),
+                "ending_fuel_gallons": round(plan.ending_gallons, 3),
+                "average_price_paid_per_gallon_usd": average_paid,
+                "number_of_stops": len(stops),
+            },
+            "fuel_stops": stops,
+            "assumptions": {
+                "starting_fuel": "Vehicle starts with a full tank; starting tank value is included in total fuel cost.",
+                "price_rule": "median of duplicate CSV rows per station ID",
+                "station_locations": "approximate: city centroid",
+                "corridor_miles": corridor_miles,
+                "corridor_policy": "auto-widens 5 -> 10 -> 15 miles",
+                "stop_penalty_usd": stop_penalty,
+                "stop_penalty_policy": "heuristic candidate-pruned penalty optimizer for long routes; penalty 0 uses the greedy reference fast path",
+                "cost_policy": "total fuel cost equals station purchases plus consumed starting-tank fuel at the price basis",
+                "detours": "Stations within the corridor are treated as on-route; detour miles are not charged.",
+            },
             "route": {
                 "distance_miles": round(total_miles, 2),
                 "duration_hours": round(route.get("duration_hours", 0), 2),
@@ -313,31 +337,7 @@ class Planner:
                 "tank_gallons": range_miles / mpg,
                 "starting_fuel_gallons": starting_fuel,
             },
-            "fuel_stops": stops,
-            "summary": {
-                "total_fuel_cost_usd": total_fuel_cost,
-                "fuel_paid_at_stations_usd": paid_at_stations,
-                "starting_tank_value_usd": starting_tank_value,
-                "price_basis_per_gallon": price_basis,
-                "cost_basis": cost_basis,
-                "gallons_purchased": round(plan.gallons_purchased, 3),
-                "gallons_consumed": round(plan.gallons_consumed, 3),
-                "ending_fuel_gallons": round(plan.ending_gallons, 3),
-                "average_price_paid_per_gallon_usd": average_paid,
-                "number_of_stops": len(stops),
-            },
             "map_url": f"/map/?start={start_text}&finish={finish_text}",
-            "assumptions": {
-                "starting_fuel": "Vehicle starts with a full tank; starting tank value is included in total fuel cost.",
-                "price_rule": "median of duplicate CSV rows per station ID",
-                "station_locations": "approximate: city centroid",
-                "corridor_miles": corridor_miles,
-                "corridor_policy": "auto-widens 5 -> 10 -> 15 miles",
-                "stop_penalty_usd": stop_penalty,
-                "stop_penalty_policy": "heuristic candidate-pruned penalty optimizer for long routes; penalty 0 uses the greedy reference fast path",
-                "cost_policy": "total fuel cost equals station purchases plus consumed starting-tank fuel at the price basis",
-                "detours": "Stations within the corridor are treated as on-route; detour miles are not charged.",
-            },
             "meta": {
                 "external_calls": external_calls[0] + (0 if route_cache_hit else 1),
                 "cache": "miss",
@@ -352,4 +352,3 @@ class Planner:
         }
         cache.set(full_key, response, 86400)
         return response
-

@@ -83,6 +83,15 @@ def test_happy_path_schema_and_external_call(api):
     )
 
 
+def test_response_places_costs_before_geometry(api):
+    client, _ = api
+    body = client.get("/api/route/", {"start": "Dallas, TX", "finish": "Chicago, IL"}).json()
+    keys = list(body)
+    assert keys.index("summary") < keys.index("route")
+    assert keys.index("fuel_stops") < keys.index("route")
+    assert keys.index("assumptions") < keys.index("route")
+
+
 def test_identical_request_is_full_cache_hit(api):
     client, provider = api
     client.get("/api/route/", {"start": "Dallas, TX", "finish": "Chicago, IL"})
