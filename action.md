@@ -1,4 +1,12 @@
-# ACTION.md — Spotter "Fuel Route API" Backend Django Assessment
+## 0. DECISIONS LOG (overrides anything below)
+
+1. The price-outlier flag was REMOVED; it is not in the assignment email.
+2. The summary includes both `total_fuel_cost_usd` (money spent at stations) and `estimated_trip_fuel_cost_usd`.
+3. The corridor auto-widens 5 -> 10 -> 15 miles.
+4. `stations_geocoded.csv` is committed so fresh clones work without `US.txt`.
+5. `manual_geocodes.csv` overrides fuzzy matches.
+
+﻿# ACTION.md — Spotter "Fuel Route API" Backend Django Assessment
 
 > **Purpose of this file.** This is a complete, self-contained briefing. Any AI
 > agent or human that reads *only this file* should be able to understand the

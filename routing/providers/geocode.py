@@ -20,6 +20,12 @@ class ResolvedLocation:
 class Gazetteer:
     def __init__(self,path):
         self.entries={}
+        self.manual={}
+        manual_path=Path(path).parent / "manual_geocodes.csv"
+        if manual_path.exists():
+            with manual_path.open(newline="", encoding="utf-8-sig") as mf:
+                for mr in csv.DictReader(mf):
+                    self.manual[(normalize_city(mr["city"]), mr["state"].strip().upper())] = (float(mr["lat"]), float(mr["lng"]), mr["city"])
         with Path(path).open(newline='',encoding='utf-8-sig') as f:
             for r in csv.DictReader(f):
                 k=(normalize_city(r['city']),r['state'].strip().upper()); v=(float(r['lat']),float(r['lng']),int(float(r.get('population') or 0)),r['city'])
@@ -28,6 +34,9 @@ class Gazetteer:
         p=[x.strip() for x in text.split(',')]; state=p[-1].upper() if len(p)>=2 and len(p[-1])==2 else None; city=','.join(p[:-1]) if state else text
         if state and state not in {k[1] for k in self.entries}: raise LocationNotInUs('The dataset covers the lower 48 states only')
         key=(normalize_city(city),state) if state else None
+        if key in self.manual:
+            lat,lng,name=self.manual[key]
+            return lat,lng,f"{name}, {state}", "manual"
         if key in self.entries:
             lat,lng,_,name=self.entries[key]; return lat,lng,f'{name}, {state}', 'gazetteer'
         choices=[(k,v) for k,v in self.entries.items() if not state or k[1]==state]; exact=[x for x in choices if x[0][0]==normalize_city(city)]
@@ -61,3 +70,6 @@ def resolve_location(text,external_calls):
     except (requests.RequestException,IndexError,KeyError,ValueError) as exc: raise LocationError('Location was not found') from exc
     if not in_lower_48(lat,lng): raise LocationNotInUs('The dataset covers the lower 48 states only')
     display=x.get('display_name',value); GeocodeCache.objects.update_or_create(query_normalized=key,defaults={'latitude':lat,'longitude':lng,'display_name':display}); return ResolvedLocation(GeoPoint(lat,lng),display,'nominatim')
+
+
+

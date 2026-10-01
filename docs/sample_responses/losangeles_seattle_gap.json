@@ -1,0 +1,7 @@
+{
+  "http_status": 422,
+  "error": {
+    "code": "NO_FUEL_STATION_IN_RANGE",
+    "message": "No fuel station reachable between mile 0 and mile 877 (gap 877 mi > range 500 mi)"
+  }
+}
