@@ -1,7 +1,3 @@
-from django.urls import path
-
-from . import views
-
-urlpatterns = [
-    path("", views.placeholder, name="home"),
-]
+﻿from django.urls import path
+from .views import RouteView,HealthView,placeholder
+urlpatterns=[path('',placeholder),path('api/route/',RouteView.as_view()),path('api/health/',HealthView.as_view())]

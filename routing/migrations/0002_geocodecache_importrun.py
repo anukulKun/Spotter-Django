@@ -1,0 +1,4 @@
+﻿from django.db import migrations, models
+class Migration(migrations.Migration):
+    dependencies=[('routing','0001_initial')]
+    operations=[migrations.CreateModel(name='GeocodeCache',fields=[('id',models.BigAutoField(auto_created=True,primary_key=True,serialize=False,verbose_name='ID')),('query_normalized',models.CharField(max_length=255,unique=True)),('latitude',models.FloatField()),('longitude',models.FloatField()),('display_name',models.CharField(max_length=255)),('created_at',models.DateTimeField(auto_now_add=True))]),migrations.CreateModel(name='ImportRun',fields=[('id',models.BigAutoField(auto_created=True,primary_key=True,serialize=False,verbose_name='ID')),('data_version',models.CharField(max_length=64,unique=True)),('source_name',models.CharField(max_length=255)),('price_rule',models.CharField(default='median',max_length=16)),('created_at',models.DateTimeField(auto_now_add=True))])]
