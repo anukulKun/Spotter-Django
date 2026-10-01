@@ -1,4 +1,4 @@
-﻿import json
+import json
 from pathlib import Path
 import pytest
 from django.core.cache import cache
@@ -80,3 +80,14 @@ def test_cache_miss_does_not_query_after_station_index_warm(api):
     # Endpoint geocoding and station matching are in-memory; the import version is already represented by the test cache.
     response=client.get('/api/route/',{'start':'Dallas, TX','finish':'Chicago, IL'}); assert response.status_code==200
 
+
+def test_input_normalization_and_route_alias(api):
+    client,_=api
+    body=client.get('/api/route/',{'start':'Dallas, Texas','finish':'Chicago, Illinois'}).json()
+    assert body['start']['resolved']=='Dallas, TX'
+    assert body['finish']['resolved']=='Chicago, IL'
+    alias=client.get('/api/route',{'start':'Dallas, TX','finish':'Chicago, IL'})
+    assert alias.status_code==200 and alias['Content-Type'].startswith('application/json')
+    same=client.get('/api/route/',{'start':'Dallas,TX','finish':'Dallas,TX'})
+    assert same.status_code==400
+    assert same.json()['error']['code']=='INVALID_PARAMS'

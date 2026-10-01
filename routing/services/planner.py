@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 import hashlib,json,time
 import numpy as np
 from django.conf import settings
@@ -26,6 +26,7 @@ class Planner:
     def plan(self,start_text,finish_text,params=None):
         params=params or {}; started=time.perf_counter(); timings={}; external=[0]
         t=time.perf_counter(); start=resolve_location(start_text,external); finish=resolve_location(finish_text,external); timings['resolve_endpoints_ms']=round((time.perf_counter()-t)*1000,2)
+        if abs(start.point.lat-finish.point.lat)<1e-9 and abs(start.point.lng-finish.point.lng)<1e-9: raise ValueError('Start and finish must be different locations')
         rng=float(params.get('range_miles',getattr(settings,'DEFAULT_RANGE_MILES',500))); mpg=float(params.get('mpg',getattr(settings,'DEFAULT_MPG',10))); corridor=float(params.get('corridor_miles',getattr(settings,'DEFAULT_CORRIDOR_MILES',5))); penalty=float(params.get('stop_penalty_usd',getattr(settings,'DEFAULT_STOP_PENALTY_USD',5))); geometry=params.get('geometry','simplified'); start_fuel=float(params['starting_fuel_gallons']) if 'starting_fuel_gallons' in params else (rng/mpg if mpg else 0)
         version=data_version()
         if not 50<=rng<=1500 or not 1<=mpg<=50 or not 0<=start_fuel<=rng/mpg or not 1<=corridor<=15 or not 0<=penalty<=100 or geometry not in {'simplified','full','none'}: raise ValueError('Invalid route parameters')

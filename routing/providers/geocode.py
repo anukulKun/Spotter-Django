@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 import csv,difflib,re
 from dataclasses import dataclass
 from pathlib import Path
@@ -7,6 +7,10 @@ from django.conf import settings
 from routing.models import GeocodeCache
 from .base import GeoPoint
 LOWER_48=(24.0,49.5,-125.0,-66.0)
+STATE_NAMES={'alabama':'AL','alaska':'AK','arizona':'AZ','arkansas':'AR','california':'CA','colorado':'CO','connecticut':'CT','delaware':'DE','florida':'FL','georgia':'GA','hawaii':'HI','idaho':'ID','illinois':'IL','indiana':'IN','iowa':'IA','kansas':'KS','kentucky':'KY','louisiana':'LA','maine':'ME','maryland':'MD','massachusetts':'MA','michigan':'MI','minnesota':'MN','mississippi':'MS','missouri':'MO','montana':'MT','nebraska':'NE','nevada':'NV','new hampshire':'NH','new jersey':'NJ','new mexico':'NM','new york':'NY','north carolina':'NC','north dakota':'ND','ohio':'OH','oklahoma':'OK','oregon':'OR','pennsylvania':'PA','rhode island':'RI','south carolina':'SC','south dakota':'SD','tennessee':'TN','texas':'TX','utah':'UT','vermont':'VT','virginia':'VA','washington':'WA','west virginia':'WV','wisconsin':'WI','wyoming':'WY','district of columbia':'DC'}
+def state_code(value):
+    token=' '.join(value.casefold().replace('.','').split())
+    return value.strip().upper() if len(token)==2 else STATE_NAMES.get(token)
 def normalize_city(v:str)->str:
     v=v.casefold().strip(); v=re.sub(r'\b(st)\.?\b','saint',v); v=re.sub(r'\b(ft)\.?\b','fort',v); v=re.sub(r'\b(mt)\.?\b','mount',v); v=re.sub(r'\b(twp|township)\b','',v); return re.sub(r'[^a-z0-9]+',' ',v).strip()
 def in_lower_48(lat,lng): return LOWER_48[0]<=lat<=LOWER_48[1] and LOWER_48[2]<=lng<=LOWER_48[3]
@@ -31,14 +35,18 @@ class Gazetteer:
                 k=(normalize_city(r['city']),r['state'].strip().upper()); v=(float(r['lat']),float(r['lng']),int(float(r.get('population') or 0)),r['city'])
                 if k not in self.entries or v[2]>self.entries[k][2]: self.entries[k]=v
     def find(self,text):
-        p=[x.strip() for x in text.split(',')]; state=p[-1].upper() if len(p)>=2 and len(p[-1])==2 else None; city=','.join(p[:-1]) if state else text
+        p=[x.strip() for x in text.split(',')]
+        state_token=p[-1] if len(p)>=2 else None
+        state=state_code(state_token) if state_token else None
+        if state_token and state is None: raise LocationNotInUs('Use a US city and two-letter state code, such as Dallas, TX')
+        city=','.join(p[:-1]) if state_token else text
         if state and state not in {k[1] for k in self.entries}: raise LocationNotInUs('The dataset covers the lower 48 states only')
         key=(normalize_city(city),state) if state else None
         if key in self.manual:
             lat,lng,name=self.manual[key]
             return lat,lng,f"{name}, {state}", "manual"
         if key in self.entries:
-            lat,lng,_,name=self.entries[key]; return lat,lng,f'{name}, {state}', 'gazetteer'
+            lat,lng,_,name=self.entries[key]; return lat,lng,f'{name}, {state}','gazetteer'
         choices=[(k,v) for k,v in self.entries.items() if not state or k[1]==state]; exact=[x for x in choices if x[0][0]==normalize_city(city)]
         if exact: best=max(exact,key=lambda x:x[1][2])
         else:
