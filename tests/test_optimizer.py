@@ -1,4 +1,4 @@
-import pytest
+﻿import pytest
 
 from routing.optimizer import Candidate, InfeasibleRoute, plan_refuelling
 
@@ -59,3 +59,11 @@ def test_candidates_outside_route_are_ignored():
 def test_larger_range_makes_a_long_gap_feasible():
     plan = plan_refuelling([Candidate(1, 877, 3)], 900, range_miles=1000)
     assert plan.ending_gallons >= 0
+
+def test_reason_strings_are_clear():
+    from routing.optimizer import Candidate, plan_refuelling
+    assert plan_refuelling([Candidate(1,100,3),Candidate(2,300,4)],700).purchases[0].reason == 'lowest price within range ahead: top up to full'
+    assert any(p.reason == 'buy just enough to reach a cheaper stop ahead' for p in plan_refuelling([Candidate(1,100,4),Candidate(2,300,3)],700,start_gallons=20).purchases)
+    assert plan_refuelling([Candidate(1,400,3)],700).purchases[0].reason == 'buy just enough to reach destination'
+
+

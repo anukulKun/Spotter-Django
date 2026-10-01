@@ -1,4 +1,4 @@
-import json
+﻿import json
 from pathlib import Path
 import pytest
 from django.core.cache import cache
@@ -35,11 +35,11 @@ def test_normalization():
 def test_happy_path_schema_and_external_call(api):
     client, provider=api; response=client.get('/api/route/',{'start':'Dallas, TX','finish':'Chicago, IL'}); body=response.json()
     assert response.status_code==200 and {'start','finish','route','vehicle','fuel_stops','summary','assumptions','meta'}<=body.keys()
-    assert body['meta']['external_calls']==1 and provider.calls==1
+    assert body['meta']['external_calls']==1 and body['meta']['routing_source']=='provider' and provider.calls==1
 
 def test_identical_request_is_full_cache_hit(api):
     client, provider=api; first=client.get('/api/route/',{'start':'Dallas, TX','finish':'Chicago, IL'}).json(); second=client.get('/api/route/',{'start':'Dallas, TX','finish':'Chicago, IL'}).json()
-    assert second['meta']['cache']=='hit' and second['meta']['osrm_ms']==0 and provider.calls==1
+    assert second['meta']['cache']=='hit' and second['meta']['osrm_ms']==0 and second['meta']['external_calls']==0 and second['meta']['routing_source']=='cache' and provider.calls==1
 
 def test_vehicle_change_reuses_route_cache(api):
     client, provider=api; client.get('/api/route/',{'start':'Dallas, TX','finish':'Chicago, IL','mpg':10}); second=client.get('/api/route/',{'start':'Dallas, TX','finish':'Chicago, IL','mpg':12}).json()
@@ -79,3 +79,4 @@ def test_cache_miss_does_not_query_after_station_index_warm(api):
     stations(); cache.clear()
     # Endpoint geocoding and station matching are in-memory; the import version is already represented by the test cache.
     response=client.get('/api/route/',{'start':'Dallas, TX','finish':'Chicago, IL'}); assert response.status_code==200
+

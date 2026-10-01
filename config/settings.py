@@ -65,12 +65,13 @@ NOMINATIM_USER_AGENT = env('NOMINATIM_USER_AGENT', default='spotter-fuel-route-a
 DEFAULT_RANGE_MILES = env('DEFAULT_RANGE_MILES', default=500.0)
 DEFAULT_MPG = env('DEFAULT_MPG', default=10.0)
 DEFAULT_CORRIDOR_MILES = env('DEFAULT_CORRIDOR_MILES', default=5.0)
-DEFAULT_STOP_PENALTY_USD = env('DEFAULT_STOP_PENALTY_USD', default=5.0)
+DEFAULT_STOP_PENALTY_USD = env('DEFAULT_STOP_PENALTY_USD', default=0.0)
 
 REDIS_URL = env('REDIS_URL', default='')
 CACHES = {'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache', 'LOCATION': 'fuel-route-api'}}
 if REDIS_URL:
     CACHES = {'default': env.cache_url('REDIS_URL')}
+
 
 
 
