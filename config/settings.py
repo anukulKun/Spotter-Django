@@ -14,7 +14,11 @@ environ.Env.read_env(BASE_DIR / ".env")
 
 SECRET_KEY = env("DJANGO_SECRET_KEY", default="dev-only-change-me")
 DEBUG = env("DJANGO_DEBUG", default=False)
-ALLOWED_HOSTS = [h.strip() for h in env("DJANGO_ALLOWED_HOSTS", default="localhost,127.0.0.1,testserver").split(",") if h.strip()]
+ALLOWED_HOSTS = [
+    h.strip()
+    for h in env("DJANGO_ALLOWED_HOSTS", default="localhost,127.0.0.1,testserver").split(",")
+    if h.strip()
+]
 SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 
 INSTALLED_APPS = [
@@ -36,16 +40,20 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
 ]
 ROOT_URLCONF = "config.urls"
-TEMPLATES = [{
-    "BACKEND": "django.template.backends.django.DjangoTemplates",
-    "DIRS": [BASE_DIR / "templates"],
-    "APP_DIRS": True,
-    "OPTIONS": {"context_processors": [
-        "django.template.context_processors.request",
-        "django.contrib.auth.context_processors.auth",
-        "django.contrib.messages.context_processors.messages",
-    ]},
-}]
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ]
+        },
+    }
+]
 WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 REST_FRAMEWORK = {"DEFAULT_RENDERER_CLASSES": ["routing.renderers.PrettyJSONRenderer"]}
@@ -60,20 +68,20 @@ USE_TZ = True
 STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-OSRM_BASE_URL = env('OSRM_BASE_URL', default='https://router.project-osrm.org')
-ROUTING_TIMEOUT_SECONDS = env('ROUTING_TIMEOUT_SECONDS', default=10)
-NOMINATIM_USER_AGENT = env('NOMINATIM_USER_AGENT', default='spotter-fuel-route-assessment')
-DEFAULT_RANGE_MILES = env('DEFAULT_RANGE_MILES', default=500.0)
-DEFAULT_MPG = env('DEFAULT_MPG', default=10.0)
-DEFAULT_CORRIDOR_MILES = env('DEFAULT_CORRIDOR_MILES', default=5.0)
-DEFAULT_STOP_PENALTY_USD = env('DEFAULT_STOP_PENALTY_USD', default=0.0)
+OSRM_BASE_URL = env("OSRM_BASE_URL", default="https://router.project-osrm.org")
+ROUTING_TIMEOUT_SECONDS = env("ROUTING_TIMEOUT_SECONDS", default=10)
+NOMINATIM_USER_AGENT = env("NOMINATIM_USER_AGENT", default="spotter-fuel-route-assessment")
+DEFAULT_RANGE_MILES = env("DEFAULT_RANGE_MILES", default=500.0)
+DEFAULT_MPG = env("DEFAULT_MPG", default=10.0)
+DEFAULT_CORRIDOR_MILES = env("DEFAULT_CORRIDOR_MILES", default=5.0)
+DEFAULT_STOP_PENALTY_USD = env("DEFAULT_STOP_PENALTY_USD", default=5.0)
 
-REDIS_URL = env('REDIS_URL', default='')
-CACHES = {'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache', 'LOCATION': 'fuel-route-api'}}
+REDIS_URL = env("REDIS_URL", default="")
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "fuel-route-api",
+    }
+}
 if REDIS_URL:
-    CACHES = {'default': env.cache_url('REDIS_URL')}
-
-
-
-
-
+    CACHES = {"default": env.cache_url("REDIS_URL")}

@@ -237,39 +237,44 @@
   },
   "fuel_stops": [],
   "summary": {
-    "total_fuel_cost_usd": 0,
+    "total_fuel_cost_usd": 9.67,
+    "fuel_paid_at_stations_usd": 0,
+    "starting_tank_value_usd": 9.67,
+    "price_basis_per_gallon": 2.976,
+    "cost_basis": "No station purchases were needed; total fuel cost is the starting tank fuel consumed, priced at the median corridor station price.",
     "gallons_purchased": 0.0,
     "gallons_consumed": 3.25,
     "ending_fuel_gallons": 46.75,
-    "average_price_paid_per_gallon_usd": 2.976,
-    "number_of_stops": 0,
-    "estimated_trip_fuel_cost_usd": 9.67,
-    "estimated_trip_cost_basis": "corridor median"
+    "average_price_paid_per_gallon_usd": null,
+    "number_of_stops": 0
   },
   "map_url": "/map/?start=Dallas, TX&finish=Fort Worth, TX",
   "assumptions": {
-    "starting_fuel": "Vehicle starts with a full tank; fuel already in the tank is not billed.",
+    "starting_fuel": "Vehicle starts with a full tank; starting tank value is included in total fuel cost.",
     "price_rule": "median of duplicate CSV rows per station ID",
     "station_locations": "approximate: city centroid",
     "corridor_miles": 5.0,
     "corridor_policy": "auto-widens 5 -> 10 -> 15 miles",
     "stop_penalty_usd": 5.0,
+    "stop_penalty_policy": "exact breakpoint DP when non-zero; default 0 uses the exact greedy fast path",
+    "cost_policy": "total fuel cost equals station purchases plus consumed starting-tank fuel at the price basis",
     "detours": "Stations within the corridor are treated as on-route; detour miles are not charged."
   },
   "meta": {
     "external_calls": 1,
     "cache": "miss",
     "routing_source": "provider",
-    "osrm_ms": 219.99,
-    "compute_ms": 25.7,
-    "total_ms": 245.69,
+    "osrm_ms": 0.03,
+    "compute_ms": 8.08,
+    "total_ms": 8.11,
     "corridor_miles_used": 5.0,
     "data_version": "a3fadfd2e71bfa13",
     "timings": {
-      "resolve_endpoints_ms": 15.98,
-      "route_prep_ms": 0.32,
-      "corridor_match_ms": 6.18,
-      "response_build_ms": 2.05
+      "resolve_endpoints_ms": 0.05,
+      "route_prep_ms": 0.14,
+      "corridor_match_ms": 1.74,
+      "optimizer_ms": 1.45,
+      "response_build_ms": 0.74
     }
   }
 }

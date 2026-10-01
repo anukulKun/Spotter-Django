@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
   "use strict";
 
   const query = new URLSearchParams(window.location.search);
@@ -90,7 +90,7 @@
       "<li>Number of stops: " + summary.number_of_stops + "</li>",
       "<li>Gallons used: " + summary.gallons_consumed + "</li>",
       "<li>Total fuel cost: " + money(summary.total_fuel_cost_usd) + "</li>",
-      "<li>Estimated trip cost: " + money(summary.estimated_trip_fuel_cost_usd) + "</li>",
+      "<li>Fuel paid at stations: " + money(summary.fuel_paid_at_stations_usd) + "</li>",
       "<li>Average price per gallon: " + money(summary.average_price_paid_per_gallon_usd) + "</li>"
     ].join("");
 

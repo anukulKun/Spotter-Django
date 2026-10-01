@@ -6,3 +6,5 @@ requests
 pytest
 pytest-django
 django-environ
+gunicorn
+psycopg[binary]

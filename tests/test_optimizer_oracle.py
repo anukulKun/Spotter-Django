@@ -34,10 +34,15 @@ def oracle(cands, total, range_miles, mpg=10.0, start=None):
 def test_greedy_matches_dp_oracle(range_miles):
     random.seed(7)
     feasible = infeasible = 0
-    for index in range(600):
+    for _index in range(600):
         total = random.choice([300, 700, 1200, 2000, 2800])
         count = random.randint(1, 45)
-        candidates = [Candidate(i, round(random.uniform(0, total) / 10) * 10, round(random.uniform(2.7, 4.5), 3)) for i in range(count)]
+        candidates = [
+            Candidate(
+                i, round(random.uniform(0, total) / 10) * 10, round(random.uniform(2.7, 4.5), 3)
+            )
+            for i in range(count)
+        ]
         start = random.choice([None, 0.0, 20.0])
         expected = oracle(candidates, total, range_miles, start=start)
         try:
@@ -48,6 +53,8 @@ def test_greedy_matches_dp_oracle(range_miles):
             continue
         assert abs(plan.total_cost - expected) <= 0.08
         start_gallons = range_miles / 10 if start is None else start
-        assert start_gallons + plan.gallons_purchased == pytest.approx(plan.gallons_consumed + plan.ending_gallons)
+        assert start_gallons + plan.gallons_purchased == pytest.approx(
+            plan.gallons_consumed + plan.ending_gallons
+        )
         feasible += 1
     assert feasible + infeasible == 600

@@ -9,3 +9,5 @@ db.sqlite3
 htmlcov/
 
 data/US.txt
+.pytest-tmp/
+.pytest-tmp/

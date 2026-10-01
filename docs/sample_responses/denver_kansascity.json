@@ -3413,49 +3413,54 @@
       "state": "KS",
       "lat": 38.87584,
       "lng": -98.70397,
-      "mile_marker": 371.74,
+      "mile_marker": 372.07,
       "distance_from_route_miles": 1.29,
       "price_per_gallon_usd": 2.959,
-      "arrival_fuel_gallons": 12.826,
+      "arrival_fuel_gallons": 12.793,
       "gallons_purchased": 10.315,
       "cost_usd": 30.52,
       "reason": "buy just enough to reach destination"
     }
   ],
   "summary": {
-    "total_fuel_cost_usd": 30.52,
+    "total_fuel_cost_usd": 178.47,
+    "fuel_paid_at_stations_usd": 30.52,
+    "starting_tank_value_usd": 147.95,
+    "price_basis_per_gallon": 2.959,
+    "cost_basis": "Total fuel cost includes rounded station purchases and the value of fuel consumed from the starting full tank, priced at the average station purchase price.",
     "gallons_purchased": 10.315,
     "gallons_consumed": 60.315,
     "ending_fuel_gallons": 0.0,
     "average_price_paid_per_gallon_usd": 2.959,
-    "number_of_stops": 1,
-    "estimated_trip_fuel_cost_usd": 178.47,
-    "estimated_trip_cost_basis": "purchases"
+    "number_of_stops": 1
   },
   "map_url": "/map/?start=Denver, CO&finish=Kansas City, MO",
   "assumptions": {
-    "starting_fuel": "Vehicle starts with a full tank; fuel already in the tank is not billed.",
+    "starting_fuel": "Vehicle starts with a full tank; starting tank value is included in total fuel cost.",
     "price_rule": "median of duplicate CSV rows per station ID",
     "station_locations": "approximate: city centroid",
     "corridor_miles": 5.0,
     "corridor_policy": "auto-widens 5 -> 10 -> 15 miles",
     "stop_penalty_usd": 5.0,
+    "stop_penalty_policy": "exact breakpoint DP when non-zero; default 0 uses the exact greedy fast path",
+    "cost_policy": "total fuel cost equals station purchases plus consumed starting-tank fuel at the price basis",
     "detours": "Stations within the corridor are treated as on-route; detour miles are not charged."
   },
   "meta": {
     "external_calls": 1,
     "cache": "miss",
     "routing_source": "provider",
-    "osrm_ms": 272.5,
-    "compute_ms": 41.83,
-    "total_ms": 314.33,
+    "osrm_ms": 0.12,
+    "compute_ms": 9.66,
+    "total_ms": 9.78,
     "corridor_miles_used": 5.0,
     "data_version": "a3fadfd2e71bfa13",
     "timings": {
-      "resolve_endpoints_ms": 15.62,
-      "route_prep_ms": 1.37,
-      "corridor_match_ms": 9.84,
-      "response_build_ms": 13.92
+      "resolve_endpoints_ms": 0.05,
+      "route_prep_ms": 0.38,
+      "corridor_match_ms": 1.84,
+      "optimizer_ms": 0.12,
+      "response_build_ms": 3.41
     }
   }
 }

@@ -2,10 +2,10 @@
   "http_status": 200,
   "start": {
     "input": "New York, NY",
-    "resolved": "New York, United States",
-    "lat": 40.7127281,
-    "lng": -74.0060152,
-    "source": "nominatim"
+    "resolved": "New York, NY",
+    "lat": 40.71427,
+    "lng": -74.00597,
+    "source": "manual"
   },
   "finish": {
     "input": "Miami, FL",
@@ -6285,33 +6285,16 @@
       "state": "VA",
       "lat": 37.86014,
       "lng": -77.46415,
-      "mile_marker": 309.39,
-      "distance_from_route_miles": 0.58,
+      "mile_marker": 307.25,
+      "distance_from_route_miles": 0.64,
       "price_per_gallon_usd": 2.899,
-      "arrival_fuel_gallons": 19.061,
-      "gallons_purchased": 5.326,
-      "cost_usd": 15.44,
-      "reason": "buy just enough to reach a cheaper stop ahead"
-    },
-    {
-      "order": 2,
-      "station_id": 72975,
-      "name": "SHEETZ #804",
-      "address": "I-95, Exit 41",
-      "city": "Hope Mills",
-      "state": "NC",
-      "lat": 34.97044,
-      "lng": -78.94531,
-      "mile_marker": 553.26,
-      "distance_from_route_miles": 2.55,
-      "price_per_gallon_usd": 2.859,
-      "arrival_fuel_gallons": 0.0,
-      "gallons_purchased": 50.0,
-      "cost_usd": 142.95,
+      "arrival_fuel_gallons": 19.275,
+      "gallons_purchased": 30.725,
+      "cost_usd": 89.07,
       "reason": "lowest price within range ahead: top up to full"
     },
     {
-      "order": 3,
+      "order": 2,
       "station_id": 71283,
       "name": "QUIKTRIP #7135",
       "address": "US-17",
@@ -6319,49 +6302,54 @@
       "state": "SC",
       "lat": 32.28714,
       "lng": -81.08067,
-      "mile_marker": 787.19,
-      "distance_from_route_miles": 0.65,
+      "mile_marker": 786.08,
+      "distance_from_route_miles": 0.71,
       "price_per_gallon_usd": 2.999,
-      "arrival_fuel_gallons": 26.606,
-      "gallons_purchased": 22.584,
-      "cost_usd": 67.73,
+      "arrival_fuel_gallons": 2.117,
+      "gallons_purchased": 47.185,
+      "cost_usd": 141.51,
       "reason": "buy just enough to reach destination"
     }
   ],
   "summary": {
-    "total_fuel_cost_usd": 226.12,
+    "total_fuel_cost_usd": 378.58,
+    "fuel_paid_at_stations_usd": 230.58,
+    "starting_tank_value_usd": 148.0,
+    "price_basis_per_gallon": 2.96,
+    "cost_basis": "Total fuel cost includes rounded station purchases and the value of fuel consumed from the starting full tank, priced at the average station purchase price.",
     "gallons_purchased": 77.91,
     "gallons_consumed": 127.91,
     "ending_fuel_gallons": 0.0,
-    "average_price_paid_per_gallon_usd": 2.902,
-    "number_of_stops": 3,
-    "estimated_trip_fuel_cost_usd": 371.19,
-    "estimated_trip_cost_basis": "purchases"
+    "average_price_paid_per_gallon_usd": 2.96,
+    "number_of_stops": 2
   },
   "map_url": "/map/?start=New York, NY&finish=Miami, FL",
   "assumptions": {
-    "starting_fuel": "Vehicle starts with a full tank; fuel already in the tank is not billed.",
+    "starting_fuel": "Vehicle starts with a full tank; starting tank value is included in total fuel cost.",
     "price_rule": "median of duplicate CSV rows per station ID",
     "station_locations": "approximate: city centroid",
     "corridor_miles": 5.0,
     "corridor_policy": "auto-widens 5 -> 10 -> 15 miles",
     "stop_penalty_usd": 5.0,
+    "stop_penalty_policy": "exact breakpoint DP when non-zero; default 0 uses the exact greedy fast path",
+    "cost_policy": "total fuel cost equals station purchases plus consumed starting-tank fuel at the price basis",
     "detours": "Stations within the corridor are treated as on-route; detour miles are not charged."
   },
   "meta": {
-    "external_calls": 2,
+    "external_calls": 1,
     "cache": "miss",
     "routing_source": "provider",
-    "osrm_ms": 783.57,
-    "compute_ms": 1104.07,
-    "total_ms": 1887.64,
+    "osrm_ms": 0.26,
+    "compute_ms": 13.09,
+    "total_ms": 13.35,
     "corridor_miles_used": 5.0,
     "data_version": "a3fadfd2e71bfa13",
     "timings": {
-      "resolve_endpoints_ms": 981.94,
-      "route_prep_ms": 3.65,
-      "corridor_match_ms": 76.35,
-      "response_build_ms": 40.83
+      "resolve_endpoints_ms": 0.05,
+      "route_prep_ms": 0.57,
+      "corridor_match_ms": 2.39,
+      "optimizer_ms": 0.46,
+      "response_build_ms": 5.42
     }
   }
 }
