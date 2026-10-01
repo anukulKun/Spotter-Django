@@ -1,4 +1,4 @@
-﻿from pathlib import Path
+from pathlib import Path
 
 import environ
 
@@ -15,6 +15,7 @@ environ.Env.read_env(BASE_DIR / ".env")
 SECRET_KEY = env("DJANGO_SECRET_KEY", default="dev-only-change-me")
 DEBUG = env("DJANGO_DEBUG", default=False)
 ALLOWED_HOSTS = [h.strip() for h in env("DJANGO_ALLOWED_HOSTS", default="localhost,127.0.0.1,testserver").split(",") if h.strip()]
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 
 INSTALLED_APPS = [
     "django.contrib.contenttypes",
