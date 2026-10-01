@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from rest_framework.views import APIView
@@ -41,6 +42,13 @@ class HealthView(APIView):
     def get(self,request):
         count=len(stations()); return Response({'status':'ok','stations_loaded':count,'data_version':(ImportRun.objects.order_by('-created_at').values_list('data_version',flat=True).first() or 'empty')}) if count else error('FUEL_DATA_NOT_LOADED','Fuel data has not been imported',503)
 def placeholder(request):
-    return HttpResponse('<html><body><h1>Fuel Route API</h1><p>Plan fuel-efficient US trips.</p><a href="/map/?start=Dallas%2C%20TX&finish=Chicago%2C%20IL">Dallas to Chicago</a> <a href="/map/?start=New%20York%2C%20NY&finish=Miami%2C%20FL">New York to Miami</a> <a href="/map/?start=Denver%2C%20CO&finish=Kansas%20City%2C%20MO">Denver to Kansas City</a></body></html>')
+    return HttpResponse('<!doctype html><html><head><title>Fuel Route Planner</title></head><body><h1>Fuel Route Planner</h1><p>Plan a US trip with fuel stops, costs, and a route map.</p><ul><li><a href="/map/?start=Dallas%2C%20TX&amp;finish=Chicago%2C%20IL">Dallas to Chicago</a></li><li><a href="/map/?start=New%20York%2C%20NY&amp;finish=Miami%2C%20FL">New York to Miami</a></li><li><a href="/map/?start=Denver%2C%20CO&amp;finish=Kansas%20City%2C%20MO">Denver to Kansas City</a></li></ul></body></html>')
 def map_view(request):
-    return render(request, 'map.html')
+    return render(request, 'routing/map.html')
+
+def map_js(request):
+    path = settings.BASE_DIR / 'routing' / 'static' / 'routing' / 'map.js'
+    return HttpResponse(path.read_text(encoding='utf-8'), content_type='application/javascript')
+
+def favicon(request):
+    return HttpResponse(status=204)
